@@ -37,6 +37,7 @@ public:
 
 
 
+
 /*----------------------- IMPLEMENTATION -----------------------*/
 template <typename T>
 TicTacToeBoard <T>::TicTacToeBoard(){
@@ -88,7 +89,6 @@ void TicTacToeBoard<T> :: display_board() {
     }
     cout << endl;
 }
-
 
 template <typename T>
 bool TicTacToeBoard<T>:: is_win(){
