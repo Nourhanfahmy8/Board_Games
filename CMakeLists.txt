@@ -7,4 +7,5 @@ add_executable(board_games
         BoardGame_Classes.h
         main.cpp
         MinMaxPlayer.h
-        Pyramid-X-O.h)
+        Pyramid-X-O.h
+        Word-Tictactoe.h)
