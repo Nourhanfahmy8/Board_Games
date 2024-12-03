@@ -1,8 +1,5 @@
-//
-// Created by nourh on 03/12/2024.
-//
-
 #ifndef BOARD_GAMES_MISERETICTACTOE_H
 #define BOARD_GAMES_MISERETICTACTOE_H
+
 
 #endif //BOARD_GAMES_MISERETICTACTOE_H
