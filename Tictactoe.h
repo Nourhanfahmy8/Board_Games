@@ -14,7 +14,7 @@ public:
     bool is_win();
     bool is_draw();
     bool game_is_over();
-    int counter_three_in_a_row(T symbol);
+    int counter_three_in_a_row(T& symbol);
 };
 
 
@@ -66,7 +66,7 @@ bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol){
     }
 
     // the cell will be updated with the symbol --> either X or O according to each player
-    this->board[x][y] = symbol;
+    this->board[x][y] = toupper(symbol);
     // the number of moves will be incremented until it reaches 24 when the game ends
     this->n_moves++;
     return true;
@@ -75,43 +75,58 @@ bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol){
 
 template <typename T>
 void TicTacToeBoard<T> :: display_board() {
+
+    // output the column index numbers at the top for better visibility
+    cout << "    ";
+    for(int x=0;x<5;x++){
+        cout  << x << "   ";
+    }
+    cout << endl;
+
+    // output the grid
     for (int i = 0; i < 5; i++) {
+        // output the row index number for better visibility for the user
+        cout << i << " | ";
         for (int j = 0; j < 5; j++) {
+
             //outputting the contents of each cell
             cout << this->board[i][j];
             //putting a separator between each column cell
             if (j < 4) cout << " | ";
         }
+        cout << " |";
         cout << "\n";
-
         //putting a separator between each row
-        if (i < 4) cout << "-----------------\n";
+        if (i < 4) cout << "  --------------------\n";
     }
     cout << endl;
+
 }
 
+// return true if 24 moves are done and no winner
 template <typename T>
-bool TicTacToeBoard<T>:: is_win(){
-    int firstplayer = counter_three_in_a_row('X');
-    int secondplayer = counter_three_in_a_row('O');
-    if(this -> n_moves== 24){
-        if(firstplayer > secondplayer){
-            return true;
-        }
-        else if(firstplayer < secondplayer){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
+bool TicTacToeBoard<T>::is_draw() {
+    return  (this->n_moves == 24 && !is_win());
 }
+
+
+// check if the game is over
+template <typename T>
+bool TicTacToeBoard<T>::game_is_over() {
+    //return this-> n_moves == 24;
+    return is_win() || is_draw();
+}
+
+
+
+
+
+
 
 // counting three-in-a-rows for each player
-// will count for each player the three in columns vertically, rows horizontally, and diagonally
+// will count for each player the three-in-a-rows in columns vertically, rows horizontally, and diagonally
 template <typename T>
-int TicTacToeBoard<T>::counter_three_in_a_row(T symbol) {
+int TicTacToeBoard<T>::counter_three_in_a_row(T &symbol) {
     int counter = 0;
 
     // checking horizontally for three in a row in rows
@@ -165,17 +180,35 @@ int TicTacToeBoard<T>::counter_three_in_a_row(T symbol) {
 }
 
 
-// check if the game is over
-template <typename T>
-bool TicTacToeBoard<T>::game_is_over() {
-    return this-> n_moves == 24;
-}
+
 
 template <typename T>
-bool TicTacToeBoard<T>::is_draw() {
-    return this->n_moves== 24 && !is_win();
+bool TicTacToeBoard<T>:: is_win(){
+    int firstplayer = counter_three_in_a_row('X');
+    int secondplayer = counter_three_in_a_row('O');
+    if(this->n_moves == 24){
+
+        // O won, second won
+        if(firstplayer < secondplayer ){
+            return true;
+        }
+
+        // X won
+        if(firstplayer > secondplayer ){
+            return true;
+        }
+    }
+    return false;
+    //return counter_three_in_a_row('X')>0 || counter_three_in_a_row('O') >0;
+
+
 }
 
+
+
+
+
+// constructor for tic Tac Toe player
 template <typename T>
 TicTacToePlayer<T>::TicTacToePlayer(string name, T symbol) : Player<T>(name, symbol) {}
 
@@ -186,12 +219,12 @@ void TicTacToePlayer<T>::getmove(int& x, int& y) {
     cout << "Please enter the cell index you want separated with a space\n";
     cin >> x;
     cin >> y;
-    //this->Board[x][y];
 }
 
 template <typename T>
 TicTacToeRandomPlayer<T>::TicTacToeRandomPlayer(T symbol) : RandomPlayer<T>(symbol) {
     this->dimension = 5;
+    this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(0)));  // Seed the random number generator
 }
 
@@ -203,12 +236,5 @@ void TicTacToeRandomPlayer<T>::getmove(int& x, int& y) {
         y = rand() % 5;
     }while (this->boardPtr->update_board(x, y, this->getsymbol()) == false);
 }
-
-
-
-
-
-
-
 
 #endif //BOARD_GAMES_TICTACTOE_H
