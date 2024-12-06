@@ -11,7 +11,7 @@ public:
     Human_Player(string n, T s) : Player<T>(n, s) {}
 
     void getmove(int& x, int& y) override {
-        cout << "{ " << this->getname() << " } Please enter your move's row and column (symbol "
+        cout << "--> { " << this->getname() << " } Please enter your move's row and column (symbol "
              << this->getsymbol() << "): ";
         cin >> x >> y;
     }
@@ -21,17 +21,19 @@ template <class T>
 class Random_Player1 : public RandomPlayer<T> {
 public:
     Random_Player1(T symbol) : RandomPlayer<T>(symbol) {
-        this->dimension = 3;
+        this->dimension = 3; // 3 rows (valid x values: 0, 1, 2)
         this->name = "Random Computer Player";
         srand(static_cast<unsigned int>(time(0)));  // Seed the random generator
     }
 
     void getmove(int& x, int& y) override {
-        do {
-            x = rand() % 3;  // Random row (0 to 2)
-            y = rand() % 5;  // Random column (0 to 4)
-        } while (!this->boardPtr->update_board(x, y, this->getsymbol())); // Ensure move is valid
+        // Random row (0 to 2)
+        x = rand() % this->dimension;
+        // Random column (0 to 4)
+        y = rand() % 5;
+        cout << "--> { " << this->getname() << " } 's Random move at < " << x << "," << y << " >\n";
     }
+
 };
 
 
@@ -40,9 +42,9 @@ class GameOne : public Board<T>{
     char arr[3][5]{};
 public:
     GameOne() {
-        for (int i = 0 ; i < 3 ; i++){
-            for (int j = 0 ; j < 5 ; j++){
-                arr[i][j] = ' ';
+        for (auto & i : arr){
+            for (char & j : i){
+                j = ' ';
             }
         }
     }
@@ -68,16 +70,29 @@ public:
             cout << endl;  // Move to the next line after finishing the row
         }
     }
-    char last_symbol;
+    char last_symbol{};
     bool update_board(int x, int y, char symbol) override {
-        if (x > 2 || x < 0 || y > 4 || y < 0) {
-            cerr << "OUT OF BOUNDS! Please enter again." << endl;
+        // Check if the coordinates are within bounds
+        if (x < 0 || x > 2 || y < 0 || y > 4) {
+            cerr << "--> OUT OF BOUNDS! Please enter again." << endl;
             return false;
         }
+
+        // Check if the move is valid for the triangular board layout
+        if ((x == 0 && y != 2) ||
+            (x == 1 && (y < 1 || y > 3)) ||
+            (x == 2 && (y < 0 || y > 4))) {
+            cerr << "--> INVALID MOVE FOR THIS BOARD! Please enter again." << endl;
+            return false;
+        }
+
+        // Check if the position is already taken
         if (arr[x][y] != ' ') {
-            cerr << "POSITION ALREADY TAKEN! Please choose another." << endl;
+            cerr << "--> POSITION ALREADY TAKEN! Please choose another." << endl;
             return false;
         }
+
+        // Update the board with the new move
         arr[x][y] = symbol;
         last_symbol = symbol;  // Store the last played symbol
         return true;
