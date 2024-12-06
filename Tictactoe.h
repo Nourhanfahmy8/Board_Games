@@ -16,7 +16,6 @@ public:
     bool is_draw();
     bool game_is_over();
     int counter_three_in_a_row(T symbol);
-
 };
 
 
