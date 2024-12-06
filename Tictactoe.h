@@ -4,9 +4,10 @@
 #include <iostream>
 #include <iomanip>
 
+Player<char>* global_Players[2];
 // class of Tic Tac Toe
 template <typename T>
-class TicTacToeBoard: public Board<T> {
+class TicTacToeBoard: public Board<T>{
 public:
     TicTacToeBoard();
     bool update_board(int x,int y,T symbol);
@@ -14,7 +15,8 @@ public:
     bool is_win();
     bool is_draw();
     bool game_is_over();
-    int counter_three_in_a_row(T& symbol);
+    int counter_three_in_a_row(T symbol);
+
 };
 
 
@@ -29,9 +31,9 @@ public:
 
 // Tic Tac Toe random player
 template <typename T>
-class TicTacToeRandomPlayer : public RandomPlayer <T>{
+class Randomplayer : public RandomPlayer <T>{
 public:
-    TicTacToeRandomPlayer(T symbol);
+    Randomplayer(T symbol);
     void getmove(int& x,int& y);
 };
 
@@ -40,6 +42,7 @@ public:
 
 /*----------------------- IMPLEMENTATION -----------------------*/
 template <typename T>
+// initialize the board with empty spaces
 TicTacToeBoard <T>::TicTacToeBoard(){
     this -> rows = 5;
     this-> columns = 5;
@@ -50,22 +53,28 @@ TicTacToeBoard <T>::TicTacToeBoard(){
             this->board[i][j] = ' ';
         }
     }
+    // initialize the number of moves to be equal 0
     this->n_moves = 0;
 }
+
 
 template <typename T>
 // updating the board with each input move by the computer player or the user
 bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol){
 
-    // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
-    // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
-    // or if the user chooses a cell which isn't empty --> move can't be made
-    if (x < 0 || x >= 5 || y < 0 || y >= 5 || this->board[x][y] != ' ') {
-        cout << "\n--> Invalid input!! Please input another cell\n";
-        return false; // Invalid move
-    }
+        // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
+        // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
+        if (x < 0 || x >= 5 || y < 0 || y >= 5) {
+            //cout << "\n--> Invalid input, the input is out of bounds. Please input a valid cell index\n";
+            return false;
+        }
+        // The user chooses a cell which isn't empty meaning it has been chosen before --> move can't be made
+        if (this->board[x][y] != ' ') {
+            //cout << "\n--> Invalid input, the cell has been chosen before. Please choose another cell\n";
+            return false;
+        }
 
-    // the cell will be updated with the symbol --> either X or O according to each player
+    // the cell will be updated with the symbol if input is valid --> either X or O according to each player
     this->board[x][y] = toupper(symbol);
     // the number of moves will be incremented until it reaches 24 when the game ends
     this->n_moves++;
@@ -74,9 +83,11 @@ bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol){
 
 
 template <typename T>
+// displaying the board
 void TicTacToeBoard<T> :: display_board() {
 
-    // output the column index numbers at the top for better visibility
+    cout << "\n --- The board at move " << this->n_moves << " ---\n";
+    // output the column index numbers at the top for better visibility for the user
     cout << "    ";
     for(int x=0;x<5;x++){
         cout  << x << "   ";
@@ -97,11 +108,12 @@ void TicTacToeBoard<T> :: display_board() {
         cout << " |";
         cout << "\n";
         //putting a separator between each row
-        if (i < 4) cout << "  --------------------\n";
+        if (i < 4) cout << "  ---------------------\n";
     }
     cout << endl;
 
 }
+
 
 // return true if 24 moves are done and no winner
 template <typename T>
@@ -110,23 +122,18 @@ bool TicTacToeBoard<T>::is_draw() {
 }
 
 
-// check if the game is over
+// check if the game is over meaning that 24 moves have been done
 template <typename T>
 bool TicTacToeBoard<T>::game_is_over() {
-    //return this-> n_moves == 24;
+    // either there is a winner or both players are draw
     return is_win() || is_draw();
 }
-
-
-
-
-
 
 
 // counting three-in-a-rows for each player
 // will count for each player the three-in-a-rows in columns vertically, rows horizontally, and diagonally
 template <typename T>
-int TicTacToeBoard<T>::counter_three_in_a_row(T &symbol) {
+int TicTacToeBoard<T>::counter_three_in_a_row(T symbol) {
     int counter = 0;
 
     // checking horizontally for three in a row in rows
@@ -175,37 +182,27 @@ int TicTacToeBoard<T>::counter_three_in_a_row(T &symbol) {
             }
         }
     }
-
     return counter;
 }
-
-
 
 
 template <typename T>
 bool TicTacToeBoard<T>:: is_win(){
     int firstplayer = counter_three_in_a_row('X');
     int secondplayer = counter_three_in_a_row('O');
-    if(this->n_moves == 24){
-
-        // O won, second won
-        if(firstplayer < secondplayer ){
+    if(this->n_moves == (24)){
+        // player 1 wins
+        if(firstplayer > secondplayer ){
+            *global_Players[1] = *global_Players[0];
             return true;
         }
 
-        // X won
-        if(firstplayer > secondplayer ){
+        if(firstplayer < secondplayer){
             return true;
         }
     }
     return false;
-    //return counter_three_in_a_row('X')>0 || counter_three_in_a_row('O') >0;
-
-
-
 }
-
-
 
 
 
@@ -217,25 +214,37 @@ TicTacToePlayer<T>::TicTacToePlayer(string name, T symbol) : Player<T>(name, sym
 // Get move from a human player
 template <typename T>
 void TicTacToePlayer<T>::getmove(int& x, int& y) {
-    cout << "Please enter the cell index you want separated with a space\n";
+    cout << "\nPlayer " << this-> getname() << ": Please enter the cell index you want separated with a space\n";
     cin >> x;
     cin >> y;
 }
 
-template <typename T>
-TicTacToeRandomPlayer<T>::TicTacToeRandomPlayer(T symbol) : RandomPlayer<T>(symbol) {
-    this->dimension = 5;
-    this->name = "Random Computer Player";
-    srand(static_cast<unsigned int>(time(0)));  // Seed the random number generator
-}
-
-// Generate a random move
-template <typename T>
-void TicTacToeRandomPlayer<T>::getmove(int& x, int& y) {
-    do {
-        x = rand() % 5;
+template <class T>
+class Random_Player : public RandomPlayer<T> {
+public:
+        Random_Player(T symbol) : RandomPlayer<T>(symbol) {
+            this->dimension = 5;
+            this->name = "Random Computer Player";
+            srand(static_cast<unsigned int>(time(0)));  // Seed the random generator
+        }
+        void getmove(int& x, int& y) override {
+        // Random row (0 to 4)
+        x = rand() % this->dimension;
+        // Random column (0 to 4)
         y = rand() % 5;
-    }while (this->boardPtr->update_board(x, y, this->getsymbol()) == false);
+        }
+
+};
+
+/*
+~TicTacToe_des(){
+    for(int i=o;i<this->rows;i++){
+        delete [] this ->board;
+    }
+    delete [] board;
+    global_Players[0] = nullptr;
+    global_Players[1] = nullptr;
 }
+*/
 
 #endif //BOARD_GAMES_TICTACTOE_H
