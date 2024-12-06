@@ -18,6 +18,7 @@ public:
     int counter_three_in_a_row(T symbol);
 };
 
+
 // Tic Tac Toe player class
 template <typename T>
 class TicTacToePlayer : public Player <T>{
