@@ -214,7 +214,6 @@ bool Four_times_Four_Board<T>::game_is_over() {
 }
 
 
-
 // constructor for tic Tac Toe player
 template <typename T>
 Four_times_Four_Player<T>::Four_times_Four_Player(string name, T symbol) : Player<T>(name, symbol) {}
