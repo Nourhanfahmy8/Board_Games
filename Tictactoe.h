@@ -5,6 +5,7 @@
 #include <iomanip>
 
 Player<char>* global_Players[2];
+
 // class of Tic Tac Toe
 template <typename T>
 class TicTacToeBoard: public Board<T>{
@@ -64,12 +65,10 @@ bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol){
         // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
         // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
         if (x < 0 || x >= 5 || y < 0 || y >= 5) {
-            //cout << "\n--> Invalid input, the input is out of bounds. Please input a valid cell index\n";
             return false;
         }
         // The user chooses a cell which isn't empty meaning it has been chosen before --> move can't be made
         if (this->board[x][y] != ' ') {
-            //cout << "\n--> Invalid input, the cell has been chosen before. Please choose another cell\n";
             return false;
         }
 
@@ -85,6 +84,7 @@ template <typename T>
 // displaying the board
 void TicTacToeBoard<T> :: display_board() {
 
+    // outputting a message for the user to tell him which move they are at
     cout << "\n --- The board at move " << this->n_moves << " ---\n";
     // output the column index numbers at the top for better visibility for the user
     cout << "    ";
