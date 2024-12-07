@@ -219,7 +219,6 @@ template <typename T>
 Four_times_Four_Player<T>::Four_times_Four_Player(string name, T symbol) : Player<T>(name, symbol) {}
 
 
-
 // Get move from a human player
 template <typename T>
 void Four_times_Four_Player<T>::getmove(int& x, int& y) {
