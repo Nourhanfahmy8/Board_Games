@@ -5,7 +5,9 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-
+Player<char>* global_Players[2];
+static bool israndom_player1 = false;
+static bool israndom_player2 = false;
 template <typename T>
 class TicTacToe {
 private:
@@ -48,7 +50,6 @@ public:
 };
 
 /*----------------------- IMPLEMENTATION -----------------------*/
-
 template < typename T>
 TicTacToe<T>::TicTacToe() : small_board(3, vector<T>(3, ' ')) {}
 
@@ -64,7 +65,7 @@ void TicTacToe<T>::display_row(int row) {
 template <typename T>
 bool TicTacToe<T>::updateB(int x, int y, T symbol) {
     if (x < 0 || x >= 3 || y < 0 || y >= 3) {
-        cout << "Invalid position!" << endl;
+        cerr << "Invalid position!" << endl;
         return false;
     }
 
@@ -76,7 +77,6 @@ bool TicTacToe<T>::updateB(int x, int y, T symbol) {
     small_board[x][y] = symbol;
     return true;
 }
-
 template <typename T>
 bool TicTacToe<T>::isWinner(T symbol) {
     // Check rows
@@ -106,57 +106,111 @@ bool TicTacToe<T>::isWinner(T symbol) {
 template <typename T>
 Ultimate_Tic_Tac_Toe<T>::Ultimate_Tic_Tac_Toe()
         : board(3, vector<TicTacToe<T>>(3)), main_board(3, vector<T>(3, ' ')) {}
-
-
 template <typename T>
 bool Ultimate_Tic_Tac_Toe<T>::update_board(int big_x, int big_y, T symbol) {
-    if (big_x < 0 || big_x >= 3 || big_y < 0 || big_y >= 3) {
-        cerr << "Invalid main board position!" << endl;
-        return false;
+    // Check if it's Player 1's turn
+    if (this->n_moves % 2 == 0) {
+        // Player 1
+        if (!israndom_player1) {
+            // Player 1 is a human
+            cout << "Enter the large grid indices (0-2) for your move:\n";
+            cin >> big_x >> big_y;
+            if (cin.fail() || big_x < 0 || big_x >= 3 || big_y < 0 || big_y >= 3) {
+                cerr << "Invalid main board position!" << endl;
+                cin.clear();          // Clear the input stream
+                cin.ignore(1000, '\n'); // Ignore remaining input
+                return false;
+            }
+
+            if (main_board[big_x][big_y] != ' ') {
+                cerr << "Main board cell already occupied!" << endl;
+                return false;
+            }
+            TicTacToe<T>& sub_board = board[big_x][big_y];
+            int small_x, small_y;
+
+            cout << "Enter the cell indices (0-2) within the selected sub-board:\n";
+            cin >> small_x >> small_y;
+
+            if (!sub_board.updateB(small_x, small_y, symbol)) {
+                cerr << "Invalid move within the sub-board. Try again.\n";
+                return false;
+            }
+        } else {
+            // Player 1 is random
+            do {
+                big_x = rand() % 3;
+                big_y = rand() % 3;
+            } while (main_board[big_x][big_y] != ' '); // Ensure the chosen sub-board is not already claimed
+
+            TicTacToe<T>& sub_board = board[big_x][big_y];
+            int small_x, small_y;
+
+            do {
+                small_x = rand() % 3;
+                small_y = rand() % 3;
+            } while (!sub_board.updateB(small_x, small_y, symbol)); // Ensure the cell is valid and unoccupied
+        }
+    } else {
+        // Player 2
+        if (!israndom_player2) {
+            // Player 2 is a human
+            cout << "Enter the large grid indices (0-2) for your move:\n";
+            cin >> big_x >> big_y;
+            if (cin.fail() || big_x < 0 || big_x >= 3 || big_y < 0 || big_y >= 3) {
+                cerr << "Invalid main board position!" << endl;
+                cin.clear();          // Clear the input stream
+                cin.ignore(1000, '\n'); // Ignore remaining input
+                return false;
+            }
+            if (main_board[big_x][big_y] != ' ') {
+                cerr << "Main board cell already occupied!" << endl;
+                return false;
+            }
+            TicTacToe<T>& sub_board = board[big_x][big_y];
+            int small_x, small_y;
+
+            cout << "Enter the cell indices (0-2) within the selected sub-board:\n";
+            cin >> small_x >> small_y;
+
+            if (!sub_board.updateB(small_x, small_y, symbol)) {
+                cerr << "Invalid move within the sub-board. Try again.\n";
+                return false;
+            }
+        } else {
+            // Player 2 is random
+            do {
+                big_x = rand() % 3;
+                big_y = rand() % 3;
+            } while (main_board[big_x][big_y] != ' '); // Ensure the chosen sub-board is not already claimed
+
+            TicTacToe<T>& sub_board = board[big_x][big_y];
+            int small_x, small_y;
+
+            do {
+                small_x = rand() % 3;
+                small_y = rand() % 3;
+            } while (!sub_board.updateB(small_x, small_y, symbol)); // Ensure the cell is valid and unoccupied
+        }
     }
-
-
-    // Check if the main board cell is already occupied
-    if (main_board[big_x][big_y] != ' ') {
-        cerr << "Main board cell already occupied!" << endl;
-        return false;
-    }
-// Get the corresponding sub-board
-    TicTacToe<T>& sub_board = board[big_x][big_y];
-
-    // Update the smaller board
-    cout << "Enter the cell indices (0-2) within the selected sub-board:\n";
-    int small_x, small_y;
-    cin >> small_x >> small_y;
-
-    if (!sub_board.updateB(small_x, small_y, symbol)) {
-        // Handle invalid moves in the small board
-        cerr << "Invalid move within the sub-board. Try again.\n";
-        return false;
-    }
-
     // Check if this move wins the small board
+    TicTacToe<T>& sub_board = board[big_x][big_y];
     if (sub_board.isWinner(symbol)) {
         cout << "Player " << symbol << " has won this sub-board!\n";
         main_board[big_x][big_y] = symbol; // Mark the main board
     }
 
-    this->n_moves++; // Track total moves
-
+    this->n_moves++; // Increment the move counter
     return true;
 }
-
-
 template <typename T>
 void Ultimate_Tic_Tac_Toe<T>::display_board() {
     cout << "\n------ Ultimate Tic Tac Toe Board ------\n\n";
 
-    cout << "        0                 1                 2\n";
-
+    cout << "       0                1                2\n";
 
     for (int big_row = 0; big_row < 3; big_row++) {  // Iterate over rows of sub-boards
         for (int small_row = 0; small_row < 3; small_row++) {  // Iterate through each row in a sub-board
-
             for (int big_col = 0; big_col < 3; big_col++) {    // Iterate over sub-boards in the current row
                 if(small_row == 1 && big_col == 0){
                     cout << big_row;
@@ -217,22 +271,6 @@ Ultimate_Player<T>::Ultimate_Player(std::string name, T symbol) :  Player<T>(nam
 // Get move from a human player
 template <typename T>
 void Ultimate_Player<T>::getmove(int& big_x, int& big_y) {
-    while (true) {
-        cout << this->name << "'s turn (Symbol: " << this->symbol << ").\n";
-        cout << "Enter the large grid indices (0-2) for your move:\n";
-
-        cin >> big_x >> big_y;
-
-        // Validate input for main board indices
-        if (cin.fail() || big_x < 0 || big_x >= 3 || big_y < 0 || big_y >= 3) {
-            cout << "Invalid input! Please enter integers between 0 and 2.\n";
-            cin.clear();          // Clear the input stream
-            cin.ignore(1000, '\n'); // Ignore remaining input
-            continue;
-        }
-
-        break; // Valid input
-    }
 }
 
 template <typename T>
@@ -245,8 +283,10 @@ Random_Ultimate_Player<T>::Random_Ultimate_Player(T symbol) : RandomPlayer<T>(sy
 template <typename T>
 void Random_Ultimate_Player<T>::getmove(int &x, int &y) {
     cout << "------------------------------\n";
-    x = rand() % 3;
-    y = rand() % 3;
+    // Random row index
+    x = rand() % this->dimension;
+    // Random column index
+    y = rand() % this->dimension;
 }
 
 
