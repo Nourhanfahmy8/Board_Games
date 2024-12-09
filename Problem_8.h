@@ -47,7 +47,8 @@ public:
     void getmove(int& x,int& y);
 };
 
-/----------------------- IMPLEMENTATION -----------------------/
+/*----------------------- IMPLEMENTATION -----------------------*/
+
 template < typename T>
 TicTacToe<T>::TicTacToe() : small_board(3, vector<T>(3, ' ')) {}
 
@@ -75,6 +76,7 @@ bool TicTacToe<T>::updateB(int x, int y, T symbol) {
     small_board[x][y] = symbol;
     return true;
 }
+
 template <typename T>
 bool TicTacToe<T>::isWinner(T symbol) {
     // Check rows
@@ -149,11 +151,17 @@ template <typename T>
 void Ultimate_Tic_Tac_Toe<T>::display_board() {
     cout << "\n------ Ultimate Tic Tac Toe Board ------\n\n";
 
-    cout << "       0                1                2\n";
+    cout << "        0                 1                 2\n";
+
 
     for (int big_row = 0; big_row < 3; big_row++) {  // Iterate over rows of sub-boards
         for (int small_row = 0; small_row < 3; small_row++) {  // Iterate through each row in a sub-board
+
             for (int big_col = 0; big_col < 3; big_col++) {    // Iterate over sub-boards in the current row
+                if(small_row == 1 && big_col == 0){
+                    cout << big_row;
+                }
+                else cout << " ";
                 // Display the current row of a sub-board
                 board[big_row][big_col].display_row(small_row);
                 if (big_col < 2) cout << "   | ";  // Separator between sub-boards
