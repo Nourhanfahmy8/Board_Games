@@ -1,6 +1,9 @@
 #ifndef Numerical_XO_H
 #define Numerical_XO_H
 #include "BoardGame_Classes.h"
+#include<limits>
+
+// NumericalBoard: A specialized board for the Numerical Tic-Tac-Toe game.
 template <typename T>
 class NumericalBoard: public Board<T>{
 public:
@@ -11,16 +14,19 @@ public:
     bool is_draw() ;
     bool game_is_over();
 };
+// NumericalPlayer: A player for Numerical Tic-Tac-Toe that ensures odd/even constraints.
 template <typename T>
 class NumericalPlayer: public Player<T>{
 private:
-    vector<int> used_nums;
-    bool used(int num);
-    bool valid_num(int num);
+    vector<int> used_nums;// Keeps track of numbers already used by the player.
+    bool used(int num);    // Checks if a number has already been used.
+    bool valid_num(int num); // Validates if the number is valid (odd/even depending on the player).
+
 public :
     NumericalPlayer(string name , T symbol) ;
     void getmove(int& x , int& y) ;
 };
+// Numerical_Random_Player: A random player for Numerical Tic-Tac-Toe with odd/even constraints.
 template <typename T>
 class Numerical_Random_Player : public RandomPlayer<T>{
 private:
@@ -38,6 +44,7 @@ public:
 #include <iostream>
 #include <iomanip>
 using namespace std;
+// Constructor for NumericalBoard: Initializes a 3x3 board with all cells set to 0.
 template <typename T>
 NumericalBoard<T>::NumericalBoard() {
     this->rows = this->columns = 3;
@@ -45,12 +52,13 @@ NumericalBoard<T>::NumericalBoard() {
     for (int i = 0; i < this->rows; i++) {
         this->board[i] = new int[this->columns];
         for (int j = 0; j < this->columns; j++) {
-            this->board[i][j] = 0;
+            this->board[i][j] = 0; // Initialize all cells to 0
         }
     }
-    this->n_moves = 0;
+    this->n_moves = 0; // Initialize move count to 0
 }
 template <typename T>
+// Updates the board with the given number if the move is valid.
 bool NumericalBoard<T>::update_board(int x, int y, T mark) {
     // Only update if move is valid
     if (x >= 0 &&  x < this->rows && y >= 0 && y < this->columns && this->board[x][y] == 0){
@@ -60,7 +68,7 @@ bool NumericalBoard<T>::update_board(int x, int y, T mark) {
     }
     return true;
 }
-
+// Displays the current state of the board.
 template <typename T>
 void NumericalBoard<T>::display_board() {
     for (int i = 0; i < this->rows; i++) {
@@ -73,6 +81,7 @@ void NumericalBoard<T>::display_board() {
     }
     cout << endl;
 }
+// Checks for a win condition (sum of 15 in rows, columns, or diagonals).
 template <typename T>
 bool NumericalBoard<T>::is_win() {
     // Check rows for win
@@ -105,12 +114,12 @@ bool NumericalBoard<T>::is_win() {
     return false;
 }
 
-// Return true if 9 moves are done and no winner
+// Return true if 9 moves are done and no winner(Draw)
 template <typename T>
 bool NumericalBoard<T>::is_draw() {
     return (this->n_moves == 9 && !is_win());
 }
-
+// Checks if the game is over (win or draw).
 template <typename T>
 bool NumericalBoard<T>::game_is_over() {
     return is_win() || is_draw();
@@ -119,7 +128,7 @@ bool NumericalBoard<T>::game_is_over() {
 // Constructor for Numerical_Player
 template <typename T>
 NumericalPlayer<T>::NumericalPlayer(string name, T symbol) : Player<T>(name, symbol) {}
-
+//Validates if the number is odd or even based on the player's symbol.
 template <typename T>
 bool NumericalPlayer<T> ::valid_num(int num) {
     if(this-> symbol == 1){
@@ -138,6 +147,7 @@ bool NumericalPlayer<T> ::used(int num) {
     }
     return false;
 }
+// Gets the player's move and validates it.
 template <typename T>
 void NumericalPlayer<T>::getmove(int& x, int& y) {
     cout << "Entering getmove for " << this->getname() << endl;
@@ -147,12 +157,24 @@ void NumericalPlayer<T>::getmove(int& x, int& y) {
         cout << this->getname() << " (" << (this->symbol == 1 ? "Odd" : "Even")
              << "), enter your move(row,col): ";
         cin >> x >> y;
+        if (cin.fail()) {
+            cin.clear(); // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            cout << "Invalid input! Please enter two integers for the row and column (0-2).\n";
+            continue;
+        }
         if (x < 0 || x >= 3 || y < 0 || y >= 3) {
             cout << "Invalid coordinates! Please enter values between 0 and 2.\n";
             continue;
         }
         cout << "Enter the number: ";
         cin >> num;
+        if (cin.fail()) {
+            cin.clear(); // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            cout << "Invalid input! Please enter integar value.\n";
+            continue;
+        }
         if(num < 1 || num > 9){
             cout << "You must enter number between(1,9) "<< endl;
             continue;
@@ -206,6 +228,7 @@ Numerical_Random_Player<T>::Numerical_Random_Player(T symbol) : RandomPlayer<T>(
         availableNumbers = {2,4,6,8};
     }
 }
+// Gets a random move for the player.
 template <typename T>
 void Numerical_Random_Player<T>::getmove(int& x, int& y){
     bool move = false;
