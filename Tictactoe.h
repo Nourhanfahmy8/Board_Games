@@ -7,7 +7,6 @@
 /// ----- PROBLEM 3 : 5*5 Tic Tac Toe ----- ///
 
 
-
 /// Class of 5*5 Tic Tac Toe
 template <typename T>
 class TicTacToeBoard: public Board<T>{
@@ -26,11 +25,19 @@ public:
 template <typename T>
 class TicTacToePlayer : public Player <T>{
 public:
-    TicTacToePlayer(string name, T symbol);
-    void getmove(int &x, int&y);
+    TicTacToePlayer(string name, T symbol) : Player<T>(name,symbol){};
+    void getmove(int &x, int&y)override{
+        
+    };
 };
 
-
+// Tic Tac Toe random player
+template <typename T>
+class Randomplayer : public RandomPlayer <T>{
+public:
+    Randomplayer(T symbol);
+    void getmove(int& x,int& y);
+};
 
 /*---------- IMPLEMENTATION ----------*/
 
@@ -42,7 +49,7 @@ TicTacToePlayer<T>::TicTacToePlayer(string name, T symbol) : Player<T>(name, sym
 /// Get move from a human player
 template <typename T>
 void TicTacToePlayer<T>::getmove(int& x, int& y) {
-    cout << "\n-> Player '" << this-> getname() << "' : Please enter the cell index you want separated with a space\n";
+    //cout << "\n-> Player '" << this-> getname() << "' : Please enter the cell index you want separated with a space\n";
 }
 
 /// Random player class and implementation
@@ -87,24 +94,70 @@ TicTacToeBoard <T>::TicTacToeBoard(){
 
 template <typename T>
 /// updating the board with each input move by the computer player or the user after validating it
-bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol){
+bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol) {
 
-        // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
-        // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
-        while(true) {
-            cin >> x >> y;
-            // validation check on the input
-            if (cin.fail() || x < 0 || x >= 5 || y < 0 || y >= 5) {
-                cerr << "\nInvalid input! Please input a valid cell index between 0 and 4 inclusive\n" << endl;
-                cin.clear();          // Clear the input stream
-                cin.ignore(1000, '\n'); // Ignore remaining input
-                continue;
-            }else if (this->board[x][y] != ' ') {
-                // The user chooses a cell which isn't empty meaning it has been chosen before --> move can't be made
-                cerr << "\nThis cell has already been chosen, Please choose another cell\n";
-            }
-            else break;
+    // Check if it's Player 1's turn
+    if (this->n_moves % 2 == 0) {
+        // Player 1
+        if (!israndom_player1) {
+            // Player 1 is a human
+            cout << "\nPlayer '1' : Please enter the indices (0-4) of cell you want to put your token in\n";
+
+                // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
+                // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
+                while (true) {
+                    cin >> x >> y;
+                    // validation check on the input
+                    if (cin.fail() || x < 0 || x >= 5 || y < 0 || y >= 5) {
+                        cerr << "\nInvalid input! Please input a valid cell index between 0 and 4 inclusive\n" << endl;
+                        cin.clear();          // Clear the input stream
+                        cin.ignore(1000, '\n'); // Ignore remaining input
+                        continue;
+                    } else if (this->board[x][y] != ' ') {
+                        // The user chooses a cell which isn't empty meaning it has been chosen before --> move can't be made
+                        cerr << "\nThis cell has already been chosen, Please choose another cell\n";
+                    } else break;
+                }
+        } else {
+            // Player 1 is random
+            do {
+                // Random row (0 to 4)
+                x = rand() % 5;
+                // Random column (0 to 4)
+                y = rand() % 5;
+            } while (this->board[x][y] != ' ');
         }
+    } else {
+        // Player 2
+        if (!israndom_player2) {
+            // player 2 is a human
+            cout << "\nPlayer '2' : Please enter the indices (0-4) of cell you want to put your token in\n";
+
+                // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
+                // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
+                while (true) {
+                    cin >> x >> y;
+                    // validation check on the input
+                    if (cin.fail() || x < 0 || x >= 5 || y < 0 || y >= 5) {
+                        cerr << "\nInvalid input! Please input a valid cell index between 0 and 4 inclusive\n" << endl;
+                        cin.clear();          // Clear the input stream
+                        cin.ignore(1000, '\n'); // Ignore remaining input
+                        continue;
+                    } else if (this->board[x][y] != ' ') {
+                        // The user chooses a cell which isn't empty meaning it has been chosen before --> move can't be made
+                        cerr << "\nThis cell has already been chosen, Please choose another cell\n";
+                    } else break;
+                }
+        } else {
+            // player 2 is random
+            do {
+                // Random row (0 to 4)
+                x = rand() % 5;
+                // Random column (0 to 4)
+                y = rand() % 5;
+            } while (this->board[x][y] != ' ');
+        }
+    }
 
     // the cell will be updated with the symbol if input is valid --> either X or O according to each player
     this->board[x][y] = toupper(symbol);
