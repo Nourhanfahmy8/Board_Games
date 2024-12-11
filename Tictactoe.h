@@ -7,6 +7,7 @@
 /// ----- PROBLEM 3 : 5*5 Tic Tac Toe ----- ///
 
 
+
 /// Class of 5*5 Tic Tac Toe
 template <typename T>
 class TicTacToeBoard: public Board<T>{
@@ -25,18 +26,8 @@ public:
 template <typename T>
 class TicTacToePlayer : public Player <T>{
 public:
-    TicTacToePlayer(string name, T symbol) : Player<T>(name,symbol){};
-    void getmove(int &x, int&y)override{
-        
-    };
-};
-
-// Tic Tac Toe random player
-template <typename T>
-class Randomplayer : public RandomPlayer <T>{
-public:
-    Randomplayer(T symbol);
-    void getmove(int& x,int& y);
+    TicTacToePlayer(string name, T symbol);
+    void getmove(int &x, int&y);
 };
 
 /*---------- IMPLEMENTATION ----------*/
@@ -49,7 +40,8 @@ TicTacToePlayer<T>::TicTacToePlayer(string name, T symbol) : Player<T>(name, sym
 /// Get move from a human player
 template <typename T>
 void TicTacToePlayer<T>::getmove(int& x, int& y) {
-    //cout << "\n-> Player '" << this-> getname() << "' : Please enter the cell index you want separated with a space\n";
+    // asking the human player to input the cell index they want
+    cout << "\n-> Player '" << this-> getname() << "' : Please input the cell index you want separated with a space\n";
 }
 
 /// Random player class and implementation
@@ -59,7 +51,7 @@ public:
     Random_Player(T symbol) : RandomPlayer<T>(symbol) {
         // setting the default dimension and name for random player
         this->dimension = 5;
-        this->name = "Random Computer Player";
+        this -> name = "Random Computer Player";
         // Seed the random generator
         srand(static_cast<unsigned int>(time(0)));
     }
@@ -101,7 +93,6 @@ bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol) {
         // Player 1
         if (!israndom_player1) {
             // Player 1 is a human
-            cout << "\nPlayer '1' : Please enter the indices (0-4) of cell you want to put your token in\n";
 
                 // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
                 // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
@@ -131,7 +122,6 @@ bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol) {
         // Player 2
         if (!israndom_player2) {
             // player 2 is a human
-            cout << "\nPlayer '2' : Please enter the indices (0-4) of cell you want to put your token in\n";
 
                 // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
                 // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
@@ -169,7 +159,6 @@ bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol) {
 
 /// displaying the board after each turn
 template <typename T>
-
 void TicTacToeBoard<T> :: display_board() {
 
     // outputting a message for the user after each turn to tell him the number of turns played
