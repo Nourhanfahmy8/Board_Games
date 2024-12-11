@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include<limits>
 using namespace std;
 
 // Four-in-a-Row Board Class
@@ -109,14 +110,23 @@ bool FourInARowBoard<T>::game_is_over() {
 }
 template <typename T>
 FourInARowPlayer<T>::FourInARowPlayer(string name, T symbol) : Player<T>(name, symbol) {}
-
-// Get move from a human player
 template <typename T>
 void FourInARowPlayer<T>::getmove(int& x, int& y) {
     cout << "Enter the column (0 to 6): ";
-    cin >> y;
-    x = 0;// rows will be calculated according what is empty from bottom rows
+    while (true) {
+        cin >> y;
+        if (cin.fail()) {
+            cin.clear(); // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input! Please enter an integer value: ";
+        } else {
+            break;
+        }
+    }
+    x = 0; // Rows will be calculated as the lowest available empty position from the bottom.
 }
+
+
 template <typename T>
 FourInARowRandomPlayer<T>::FourInARowRandomPlayer(T symbol) : RandomPlayer<T>(symbol) {
     this->dimension = 7;
