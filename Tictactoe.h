@@ -6,8 +6,6 @@
 
 /// ----- PROBLEM 3 : 5*5 Tic Tac Toe ----- ///
 
-
-
 /// Class of 5*5 Tic Tac Toe
 template <typename T>
 class TicTacToeBoard: public Board<T>{
@@ -30,6 +28,8 @@ public:
     void getmove(int &x, int&y);
 };
 
+
+
 /*---------- IMPLEMENTATION ----------*/
 
 /// constructor for 5*5 tic Tac Toe player
@@ -40,8 +40,7 @@ TicTacToePlayer<T>::TicTacToePlayer(string name, T symbol) : Player<T>(name, sym
 /// Get move from a human player
 template <typename T>
 void TicTacToePlayer<T>::getmove(int& x, int& y) {
-    // asking the human player to input the cell index they want
-    cout << "\n-> Player '" << this-> getname() << "' : Please input the cell index you want separated with a space\n";
+    cout << "\n-> Player '" << this-> getname() << "' : Please enter the cell index you want separated with a space\n";
 }
 
 /// Random player class and implementation
@@ -51,7 +50,7 @@ public:
     Random_Player(T symbol) : RandomPlayer<T>(symbol) {
         // setting the default dimension and name for random player
         this->dimension = 5;
-        this -> name = "Random Computer Player";
+        this->name = "Random Computer Player";
         // Seed the random generator
         srand(static_cast<unsigned int>(time(0)));
     }
@@ -86,68 +85,24 @@ TicTacToeBoard <T>::TicTacToeBoard(){
 
 template <typename T>
 /// updating the board with each input move by the computer player or the user after validating it
-bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol) {
+bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol){
 
-    // Check if it's Player 1's turn
-    if (this->n_moves % 2 == 0) {
-        // Player 1
-        if (!israndom_player1) {
-            // Player 1 is a human
-
-                // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
-                // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
-                while (true) {
-                    cin >> x >> y;
-                    // validation check on the input
-                    if (cin.fail() || x < 0 || x >= 5 || y < 0 || y >= 5) {
-                        cerr << "\nInvalid input! Please input a valid cell index between 0 and 4 inclusive\n" << endl;
-                        cin.clear();          // Clear the input stream
-                        cin.ignore(1000, '\n'); // Ignore remaining input
-                        continue;
-                    } else if (this->board[x][y] != ' ') {
-                        // The user chooses a cell which isn't empty meaning it has been chosen before --> move can't be made
-                        cerr << "\nThis cell has already been chosen, Please choose another cell\n";
-                    } else break;
-                }
-        } else {
-            // Player 1 is random
-            do {
-                // Random row (0 to 4)
-                x = rand() % 5;
-                // Random column (0 to 4)
-                y = rand() % 5;
-            } while (this->board[x][y] != ' ');
+        // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
+        // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
+        while(true) {
+            cin >> x >> y;
+            // validation check on the input
+            if (cin.fail() || x < 0 || x >= 5 || y < 0 || y >= 5) {
+                cerr << "\nInvalid input! Please input a valid cell index between 0 and 4 inclusive\n" << endl;
+                cin.clear();          // Clear the input stream
+                cin.ignore(1000, '\n'); // Ignore remaining input
+                continue;
+            }else if (this->board[x][y] != ' ') {
+                // The user chooses a cell which isn't empty meaning it has been chosen before --> move can't be made
+                cerr << "\nThis cell has already been chosen, Please choose another cell\n";
+            }
+            else break;
         }
-    } else {
-        // Player 2
-        if (!israndom_player2) {
-            // player 2 is a human
-
-                // if the user inputs a row index less than 0 or greater than 4 --> out of bounds
-                // or if the user inputs a column index less than 0 or greater than 4 --> out of bounds
-                while (true) {
-                    cin >> x >> y;
-                    // validation check on the input
-                    if (cin.fail() || x < 0 || x >= 5 || y < 0 || y >= 5) {
-                        cerr << "\nInvalid input! Please input a valid cell index between 0 and 4 inclusive\n" << endl;
-                        cin.clear();          // Clear the input stream
-                        cin.ignore(1000, '\n'); // Ignore remaining input
-                        continue;
-                    } else if (this->board[x][y] != ' ') {
-                        // The user chooses a cell which isn't empty meaning it has been chosen before --> move can't be made
-                        cerr << "\nThis cell has already been chosen, Please choose another cell\n";
-                    } else break;
-                }
-        } else {
-            // player 2 is random
-            do {
-                // Random row (0 to 4)
-                x = rand() % 5;
-                // Random column (0 to 4)
-                y = rand() % 5;
-            } while (this->board[x][y] != ' ');
-        }
-    }
 
     // the cell will be updated with the symbol if input is valid --> either X or O according to each player
     this->board[x][y] = toupper(symbol);
@@ -159,6 +114,7 @@ bool TicTacToeBoard<T> :: update_board(int x, int y, T symbol) {
 
 /// displaying the board after each turn
 template <typename T>
+
 void TicTacToeBoard<T> :: display_board() {
 
     // outputting a message for the user after each turn to tell him the number of turns played
