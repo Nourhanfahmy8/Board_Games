@@ -20,7 +20,6 @@ public:
     int count_three_in_a_row(T symbol);
 };
 
-
 /// Class of 3*3 Tic Tac Toe player class
 template <typename T>
 class MisereTicTacToePlayer : public Player <T>{
