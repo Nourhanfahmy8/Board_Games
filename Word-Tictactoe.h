@@ -4,16 +4,16 @@
 #include <iostream>
 #include <fstream>
 #include <set>
-
-
 using namespace std;
 
+// Class of human player of word game
 template <class T>
 class HumanPlayer : public Player<T> {
 public:
     HumanPlayer(string n, T s) : Player<T>(n, s) {}
 
     void getmove(int& x, int& y) override {
+        // Make user enters row , column and the character he wants to add in this row and column
         char character;
         cout << "--> { " << this->getname() << " } Enter your move's row, column, and character (A-Z):";
         cin >> x >> y >> character;
@@ -29,7 +29,8 @@ public:
     }
 };
 
-template <class T>
+// Class of random player
+template <typename T>
 class Random_Player4 : public RandomPlayer<T> {
 public:
     Random_Player4(T symbol) : RandomPlayer<T>(symbol) {
@@ -47,18 +48,20 @@ public:
     }
 };
 
+// Class of the word game
 template <class T>
 class GameFour : public Board<T>{
-    char arr2[3][3]{};
-    set <string> dictionary;
+    char arr2[3][3]{}; // Array of the board
+    set <string> dictionary; // Set of the words
 public:
+    // Initialize the board's cells with spaces
     GameFour() {
         for (auto &i : arr2) {
             for (char &j : i) {
                 j = ' ';
             }
         }
-        loadFromFile("dic.txt");
+        loadFromFile("dic.txt"); // Name of valid words
     }
 
     // Load dictionary from file
@@ -109,45 +112,6 @@ public:
 
 
     // Check for valid words in file
-    bool is_valid_word() {
-        // Check rows
-        for (int i = 0; i < 3; ++i) {
-            string row;
-            for (int j = 0; j < 3; ++j) {
-                row += arr2[i][j];
-            }
-            // Means row's word is found in the dictionary file
-            if (dictionary.find(row) != dictionary.end()) {
-                return true;
-            }
-        }
-
-        // Check columns
-        for (int j = 0; j < 3; ++j) {
-            string col;
-            for (int i = 0; i < 3; ++i) {
-                col += arr2[i][j];
-            }
-            // Means column's word is found in the dictionary file
-            if (dictionary.find(col) != dictionary.end()) {
-                return true;
-            }
-        }
-
-        // Check diagonals
-        string diag1, diag2;
-        for (int i = 0; i < 3; ++i) {
-            diag1 += arr2[i][i];
-            diag2 += arr2[i][2 - i];
-        }
-        // Means diagonal1's word and diagonal2's are found in the dictionary file
-        if (dictionary.find(diag1) != dictionary.end() || dictionary.find(diag2) != dictionary.end()) {
-            return true;
-        }
-
-        // The words are not found
-        return false;
-    }
     string get_winning_word() {
         // Check rows for a winning word
         for (int i = 0; i < 3; ++i) {
@@ -197,7 +161,6 @@ public:
         }
         return false;
     }
-
 
     // Check if the game is a draw
     bool is_draw() override {
