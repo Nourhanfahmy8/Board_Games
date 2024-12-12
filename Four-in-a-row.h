@@ -7,6 +7,8 @@
 #include<limits>
 using namespace std;
 
+/// Problem 2: Four in a row ///
+
 // Four-in-a-Row Board Class
 template <typename T>
 class FourInARowBoard : public Board<T> {
