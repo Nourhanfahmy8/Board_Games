@@ -6,6 +6,9 @@
 
 /// ----- PROBLEM 3 : 5*5 Tic Tac Toe ----- ///
 
+Player<char>* global_Players[2];
+static bool israndom_player1 = false;
+static bool israndom_player2 = false;
 
 /// Class of 5*5 Tic Tac Toe
 template <typename T>
