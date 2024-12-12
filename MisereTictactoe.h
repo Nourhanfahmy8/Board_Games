@@ -4,7 +4,9 @@
 #include "BoardGame_Classes.h"
 #include <iostream>
 #include <iomanip>
-
+Player<char>* global_Players[2];
+static bool israndom_player1 = false;
+static bool israndom_player2 = false;
 /// ----- PROBLEM 6 : Misere Tic Tac Toe ----- ///
 
 /// class of 3*3 Misere Tic Tac Toe
@@ -27,7 +29,6 @@ public:
     MisereTicTacToePlayer(string name, T symbol);
     void getmove(int &x, int&y);
 };
-
 
 /*---------- IMPLEMENTATION -----------*/
 
