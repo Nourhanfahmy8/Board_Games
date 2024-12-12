@@ -6,9 +6,6 @@
 
 /// Problem 7: 4*4 Tic Tac Toe ///
 
-Player<char>* global_Players[2];
-static bool israndom_player1 = false;
-static bool israndom_player2 = false;
 
 /// class of 4x4 Tic Tac Toe
 template <typename T>
