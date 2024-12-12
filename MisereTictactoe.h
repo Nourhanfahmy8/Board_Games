@@ -4,9 +4,9 @@
 #include "BoardGame_Classes.h"
 #include <iostream>
 #include <iomanip>
-Player<char>* global_Players[2];
-static bool israndom_player1 = false;
-static bool israndom_player2 = false;
+//Player<char>* global_Players[2];
+//static bool israndom_player1 = false;
+//static bool israndom_player2 = false;
 /// ----- PROBLEM 6 : Misere Tic Tac Toe ----- ///
 
 /// class of 3*3 Misere Tic Tac Toe
