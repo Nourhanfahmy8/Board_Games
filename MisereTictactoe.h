@@ -30,8 +30,6 @@ public:
 };
 
 
-
-
 /*---------- IMPLEMENTATION -----------*/
 
 /// initialize the board for the misere tic tac toe with empty spaces
