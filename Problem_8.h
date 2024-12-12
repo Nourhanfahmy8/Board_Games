@@ -6,55 +6,56 @@
 #include <vector>
 using namespace std;
 
-Player<char>* global_Players[2];
-static bool israndom_player1 = false;
-static bool israndom_player2 = false;
-
+// Template class for a simple 3x3 Tic Tac Toe game
 template <typename T>
 class TicTacToe {
 private:
     vector<vector<T>> small_board; // 3x3 grid for the smaller Tic Tac Toe game
-    int nMoves;
+    int nMoves; // Tracks the number of moves made on the board
 
 public:
     TicTacToe();
-    void display_row(int row); // For displaying specific rows
-    bool updateB(int x, int y, T symbol); // updating the grid with the input symbol
-    bool update_win(int x, int y, T symbol); // to update the small grid with the players symbol
-    bool isWinner(T symbol);
-    bool isDraw(T symbol);
+    void display_row(int row); // Displays a specific row of the small board
+    bool updateB(int x, int y, T symbol); // Updates the grid with the input symbol at (x, y)
+    bool update_win(int x, int y, T symbol); // Updates the board to show the winner's symbol
+    bool isWinner(T symbol); // Checks if the given symbol has won
+    bool isDraw(); // Checks if the game is a draw
 };
 
-
+// Template class for the Ultimate Tic Tac Toe game
 template <typename T>
-class Ultimate_Tic_Tac_Toe: public Board<T>{
-    vector<vector<TicTacToe<T>>> board;   // 3x3 grid of smaller boards
-    vector<vector<T>> main_board;
+class Ultimate_Tic_Tac_Toe : public Board<T> {
+    vector<vector<TicTacToe<T>>> board; // 3x3 grid of smaller Tic Tac Toe boards
+    vector<vector<T>> main_board; // Main board to track the state of each smaller board
 public:
     Ultimate_Tic_Tac_Toe();
-    bool update_board(int x,int y,T symbol);
-    void display_board();
-    bool is_win();
-    bool is_draw();
-    bool game_is_over();
-
+    bool update_board(int x, int y, T symbol); // Updates a specific small board with a move
+    void display_board(); // Displays the entire Ultimate Tic Tac Toe board
+    bool is_win(); // Checks if a player has won the game
+    bool is_draw(); // Checks if the game is a draw
+    bool game_is_over(); // Determines if the game is over
 };
 
+// Template class for a human player in Ultimate Tic Tac Toe
 template <typename T>
-class Ultimate_Player : public Player <T>{
+class Ultimate_Player : public Player<T> {
 public:
-    Ultimate_Player(string name, T symbol);
-    void getmove(int &x, int&y);
+    Ultimate_Player(string name, T symbol); // Constructor for the player
+    void getmove(int &x, int &y); // Gets the move from the player (not fully implemented)
 };
 
+// Template class for a random computer player in Ultimate Tic Tac Toe
 template <typename T>
-class Random_Ultimate_Player : public RandomPlayer <T>{
+class Random_Ultimate_Player : public RandomPlayer<T> {
 public:
-    Random_Ultimate_Player(T symbol);
-    void getmove(int& x,int& y);
+    Random_Ultimate_Player(T symbol); // Constructor for the random player
+    void getmove(int &x, int &y); // Gets a random move
 };
+
 
 /*----------------------- IMPLEMENTATION -----------------------*/
+
+// Constructor initializes the small board to empty spaces
 template < typename T>
 TicTacToe<T>::TicTacToe() : small_board(3, vector<T>(3, ' ')) {}
 
@@ -69,27 +70,19 @@ void TicTacToe<T>::display_row(int row) {
     }
 }
 
+// Updates the board with a player's symbol at (x, y)
 template <typename T>
 bool TicTacToe<T>::updateB(int x, int y, T symbol) {
-
-    // validation check if the input is out of bounds
     if (x < 0 || x >= 3 || y < 0 || y >= 3) {
-        //cerr << "\nInvalid input! The input is out of bounds, please input an index value between 0 and 2\n" << endl;
-        return false;
+        return false; // Invalid input
     }
-
-        // checking if the small board index is not empty
-    else if (small_board[x][y] != ' ') {
-        //cout << "\nThe cell is already occupied!\n" << endl;
-        return false;
+    if (small_board[x][y] != ' ') {
+        return false; // Cell is already occupied
     }
-
-    // if the input is valid, the symbol of the current player will be set at that index
     small_board[x][y] = symbol;
     nMoves++;
     return true;
 }
-
 
 // function to set the small grid with the symbol of the winning player
 template <typename T>
@@ -134,13 +127,10 @@ bool TicTacToe<T>::isWinner(T symbol) {
 }
 
 template <typename T>
-bool TicTacToe<T>::isDraw(T symbol) {
-    if(nMoves == 9){
-        cout << "Draw for sub-board\n";
-        return true;
-    }
-    return false;
+bool TicTacToe<T>::isDraw() {
+    return nMoves == 9;
 }
+
 // initializing the main big board with empty space
 template <typename T>
 Ultimate_Tic_Tac_Toe<T>::Ultimate_Tic_Tac_Toe()
@@ -303,9 +293,10 @@ bool Ultimate_Tic_Tac_Toe<T>::update_board(int big_x, int big_y, T symbol) {
         }
         main_board[big_x][big_y] = symbol; // Mark the main board
     }
-    if(sub_board.isDraw(symbol)){
+    if(sub_board.isDraw()){
         cerr << "\nDraw of this sub-board!\n";
     }
+    //main_board[big_x][big_y] = symbol; // Mark the main board
     this->n_moves++; // Increment the move counter
     return true;
 }
@@ -365,11 +356,7 @@ bool Ultimate_Tic_Tac_Toe<T>::is_win() {
 
 template <typename T>
 bool Ultimate_Tic_Tac_Toe<T>::is_draw() {
-    if (this->n_moves == 81) {  // 81 moves in total (9 small boards * 9 cells each)
-        cout << "\nIt's a draw!\n" << endl;
-        return true;
-    }
-    return false;
+    return this->n_moves == 81;
 }
 
 // game is over if there is a winner of the game is a draw
@@ -378,8 +365,10 @@ bool Ultimate_Tic_Tac_Toe<T>::game_is_over() {
     return is_win() || is_draw();
 }
 
+// Human player constructor
 template<typename T>
-Ultimate_Player<T>::Ultimate_Player(std::string name, T symbol) :  Player<T>(name, symbol) {}
+Ultimate_Player<T>::Ultimate_Player(std::string name, T symbol) : Player<T>(name, symbol) {}
+
 
 // Get move from a human player
 template <typename T>
@@ -389,8 +378,9 @@ void Ultimate_Player<T>::getmove(int& big_x, int& big_y) {
 
 }
 
-template <typename T>
-Random_Ultimate_Player<T>::Random_Ultimate_Player(T symbol) : RandomPlayer<T>(symbol){
+// Gets a move from the random player
+template<typename T>
+Random_Ultimate_Player<T>::Random_Ultimate_Player(T symbol) : RandomPlayer<T>(symbol) {
     this->dimension = 3;
     this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(0)));
@@ -404,6 +394,5 @@ void Random_Ultimate_Player<T>::getmove(int &x, int &y) {
     // Random column index
     y = rand() % this->dimension;
 }
-
 
 #endif //BOARD_GAMES_PROBLEM_8_H
