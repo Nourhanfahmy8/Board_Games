@@ -7,15 +7,19 @@ using namespace std;
 
 /// Problem 1: Pyramid Tic Tac Toe ///
 
+// CLass of player of xo game
 template <class T>
 class Human_Player : public Player<T> {
 public:
     Human_Player(string n, T s) : Player<T>(n, s) {}
 
     void getmove(int& x, int& y) override {
+        // Asking user to enter the index
         cout << "--> { " << this->getname() << " } Please enter your move's row and column (symbol "
              << this->getsymbol() << "): ";
         cin >> x >> y;
+
+        // Adding boundaries of the row and column
         if (x < 0 || x > 2 || y < 0 || y > 4) {
             cerr << "--> OUT OF BOUNDS!" << endl;
         }
@@ -26,10 +30,10 @@ public:
             (x == 2 && (y < 0 || y > 4))) {
             cerr << "--> OUT OF PYRAMID SHAPE!" << endl;
         }
-
     }
 };
 
+// Class if the random player
 template <class T>
 class Random_Player1 : public RandomPlayer<T> {
 public:
@@ -51,9 +55,10 @@ public:
 
 template < class T>
 class GameOne : public Board<T>{
-    char arr[3][5]{};
+    char arr[3][5]{}; // Array to store the input
 public:
     GameOne() {
+        // Initialize the array cells with space
         for (auto & i : arr){
             for (char & j : i){
                 j = ' ';
@@ -155,6 +160,7 @@ public:
         return false;
     }
     bool is_draw() override {
+        // When all the cells is full so it's draw
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 5; ++j) {
                 if ((i == 0 && j == 2) || (i == 1 && j >= 1 && j <= 3) || (i == 2)) {
@@ -164,6 +170,7 @@ public:
         }
         return true;
     }
+    // Game ends when someone wins or all the cells are full
     bool game_is_over() override {
         return is_draw() || is_win();
     }
