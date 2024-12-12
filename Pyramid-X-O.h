@@ -5,6 +5,8 @@
 #include <iostream>
 using namespace std;
 
+/// Problem 1: Pyramid Tic Tac Toe ///
+
 template <class T>
 class Human_Player : public Player<T> {
 public:
