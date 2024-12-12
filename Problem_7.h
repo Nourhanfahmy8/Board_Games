@@ -74,11 +74,11 @@ Four_times_Four_Board <T>::Four_times_Four_Board(){
     for (int i = 0; i < this->rows; i++) {
         this->board[i] = new T[this->columns];
         for (int j = 0; j < this->columns; j++) {
-            // initialize the tokens of 'x', player 1 in their initial position
+            // initialize the tokens of 'O', player 2 in their initial position
             if((i==0 && j == 0) || (i==0 && j == 2) || (i==3 && j == 1) || (i==3 && j == 3)){
                 this->board[i][j] = 'O';
             }
-                // initialize the tokens of 'O', player 2 in their initial position
+                // initialize the tokens of 'X', player 1 in their initial position
             else if((i==0 && j == 1) || (i==0 && j == 3) || (i==3 && j == 0) || (i==3 && j == 2)){
                 this->board[i][j] = 'X';
 
