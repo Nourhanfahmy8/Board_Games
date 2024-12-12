@@ -1,9 +1,9 @@
 #ifndef BOARD_GAMES_PROBLEM_8_H
 #define BOARD_GAMES_PROBLEM_8_H
-
 #include "BoardGame_Classes.h"
 #include <iostream>
 #include <vector>
+
 using namespace std;
 Player<char>* global_Players[2];
 static bool israndom_player1 = false;
@@ -12,7 +12,6 @@ template <typename T>
 class TicTacToe {
 private:
     vector<vector<T>> small_board;  // 3x3 grid for the smaller Tic Tac Toe game
-
 public:
     TicTacToe();
     void display_row(int row); // For displaying specific rows
@@ -103,6 +102,8 @@ bool TicTacToe<T>::isWinner(T symbol) {
 
     return false;
 }
+
+
 template <typename T>
 Ultimate_Tic_Tac_Toe<T>::Ultimate_Tic_Tac_Toe()
         : board(3, vector<TicTacToe<T>>(3)), main_board(3, vector<T>(3, ' ')) {}
