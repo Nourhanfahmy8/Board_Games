@@ -14,6 +14,17 @@ public:
         cout << "--> { " << this->getname() << " } Please enter your move's row and column (symbol "
              << this->getsymbol() << "): ";
         cin >> x >> y;
+        if (x < 0 || x > 2 || y < 0 || y > 4) {
+            cerr << "--> OUT OF BOUNDS!" << endl;
+        }
+
+        // Check if the move is valid for the triangular board layout
+        if ((x == 0 && y != 2) ||
+            (x == 1 && (y < 1 || y > 3)) ||
+            (x == 2 && (y < 0 || y > 4))) {
+            cerr << "--> OUT OF PYRAMID SHAPE!" << endl;
+        }
+
     }
 };
 
@@ -31,7 +42,6 @@ public:
         x = rand() % this->dimension;
         // Random column (0 to 4)
         y = rand() % 5;
-        cout << "--> { " << this->getname() << " } 's Random move at < " << x << "," << y << " >\n";
     }
 
 };
@@ -69,12 +79,12 @@ public:
             }
             cout << endl;  // Move to the next line after finishing the row
         }
+        cout << endl;
     }
     char last_symbol{};
     bool update_board(int x, int y, char symbol) override {
         // Check if the coordinates are within bounds
         if (x < 0 || x > 2 || y < 0 || y > 4) {
-            cerr << "--> OUT OF BOUNDS! Please enter again." << endl;
             return false;
         }
 
@@ -82,13 +92,11 @@ public:
         if ((x == 0 && y != 2) ||
             (x == 1 && (y < 1 || y > 3)) ||
             (x == 2 && (y < 0 || y > 4))) {
-            cerr << "--> INVALID MOVE FOR THIS BOARD! Please enter again." << endl;
             return false;
         }
 
         // Check if the position is already taken
         if (arr[x][y] != ' ') {
-            cerr << "--> POSITION ALREADY TAKEN! Please choose another." << endl;
             return false;
         }
 
