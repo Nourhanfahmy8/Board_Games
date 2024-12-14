@@ -258,7 +258,7 @@ MisereTicTacToePlayer<T>::MisereTicTacToePlayer(string name, T symbol) : Player<
 /// telling the player to input the cell index they want
 template <typename T>
 void MisereTicTacToePlayer<T>::getmove(int& x, int& y) {
-    cout << "Player '" << this->getname() << "' : Please enter the cell index you want separated with a space\n";
+    cout << "\nPlayer '" << this-> getname() << "' : Please enter the cell index you want separated with a space\n";
 
 }
 
