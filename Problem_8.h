@@ -128,6 +128,8 @@ bool TicTacToe<T>::isWinner(T symbol) {
     return false;
 }
 
+
+// checks if there is a draw in one of the small grids
 template <typename T>
 bool TicTacToe<T>::isDraw() {
     return nMoves == 9;
@@ -157,13 +159,17 @@ bool Ultimate_Tic_Tac_Toe<T>::update_board(int big_x, int big_y, T symbol) {
                     cerr << "\nInvalid input! Please input a valid index value from 0 to 2\n" << endl;
                     cin.clear();          // Clear the input stream
                     cin.ignore(1000, '\n'); // Ignore remaining input
-                    //return false;
                     continue;
                 }
-                // check if the input main board cell is not empty
+                // check if the input main board cell is not empty meaning that there was a winner
                 if (main_board[big_x][big_y] != ' ') {
                     cerr << "\nMain board cell is already occupied, Please choose a different main board cell\n" << endl;
-                    //return false;
+                    continue;
+                }
+                // check is the small grid is full and there isn't a winner, it's draw
+                TicTacToe<T>& sub_board = board[big_x][big_y];
+                if(sub_board.isDraw()){
+                    cerr << "\nThe selected grid is full\n";
                     continue;
                 } else break;
             }
@@ -179,7 +185,6 @@ bool Ultimate_Tic_Tac_Toe<T>::update_board(int big_x, int big_y, T symbol) {
                     cerr << "\nInvalid input! Please input a valid index value from 0 to 2\n" << endl;
                     cin.clear();          // Clear the input stream
                     cin.ignore(1000, '\n'); // Ignore remaining input
-                    //return false;
                     continue;
                 }
 
@@ -219,13 +224,16 @@ bool Ultimate_Tic_Tac_Toe<T>::update_board(int big_x, int big_y, T symbol) {
                     cin.clear();          // Clear the input stream
                     cin.ignore(1000, '\n'); // Ignore remaining input
                     continue;
-                    //return false;
                 }
 
                 if (main_board[big_x][big_y] != ' ') {
                     cerr << "\nMain board cell already occupied!\n" << endl;
                     continue;
-                    //return false;
+                }
+                TicTacToe<T>& sub_board = board[big_x][big_y];
+                if(sub_board.isDraw()){
+                    cerr << "\nThe selected grid is full\n";
+                    continue;
                 } else break;
             }
             TicTacToe<T> &sub_board = board[big_x][big_y];
@@ -239,13 +247,11 @@ bool Ultimate_Tic_Tac_Toe<T>::update_board(int big_x, int big_y, T symbol) {
                     cerr << "\nInvalid input! Please input a valid index value from 0 to 2\n" << endl;
                     cin.clear();          // Clear the input stream
                     cin.ignore(1000, '\n'); // Ignore remaining input
-                    //return false;
                     continue;
                 }
                 if (!sub_board.updateB(small_x, small_y, symbol)) {
                     cerr << "\nInvalid move within the sub-board. Try again.\n";
                     continue;
-                    //return false;
                 } else break;
             }
 
@@ -293,12 +299,8 @@ bool Ultimate_Tic_Tac_Toe<T>::update_board(int big_x, int big_y, T symbol) {
                 }
             }
         }
-        main_board[big_x][big_y] = symbol; // Mark the main board
+        main_board[big_x][big_y] = symbol; // Mark the main board with the winners symbol
     }
-    if(sub_board.isDraw()){
-        cerr << "\nDraw of this sub-board!\n";
-    }
-    //main_board[big_x][big_y] = symbol; // Mark the main board
     this->n_moves++; // Increment the move counter
     return true;
 }
