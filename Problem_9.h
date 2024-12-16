@@ -7,6 +7,10 @@
 
 /// Problem 9: SUS game ///
 
+Player<char>* global_Players[2];
+static bool israndom_player1 = false;
+static bool israndom_player2 = false;
+
 /// class of 3*3 SUS Tic Tac Toe
 template <typename T>
 class SUS_board: public Board<T> {
