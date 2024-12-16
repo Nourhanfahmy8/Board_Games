@@ -1,7 +1,6 @@
 // File name:  A2_S21_Task2345_20230560_GroupB_20230172_20230119
 // Team members: Nourhan Mohammed Ahmed (20230560), Salma Yasser Saied Abdelhalim (20230172), Habiba Mahmoud Mohamed Salem (20230119)
 
-
 #include "BoardGame_Classes.h"
 #include "Pyramid-X-O.h"
 #include "Four-in-a-row.h"
@@ -11,11 +10,15 @@
 #include "MisereTictactoe.h"
 #include "Problem_7.h"
 #include "Problem_8.h"
+#include "Problem_9.h"
 #include <iostream>
 #include <limits>
 
 using namespace std;
-
+//
+//Player<char>* global_Players[2];
+//static bool israndom_player1 = false;
+//static bool israndom_player2 = false;
 
 int main() {
 
@@ -27,7 +30,7 @@ int main() {
         cout << "** Please choose which Tic Tac Toe Game you would like to play:-\n";
         cout << "1) Pyramid Tic-Tac-Toe.\n2) Four-in-a-row.\n3) 5 x 5 Tic-Tac-Toe.\n4) Word Tic-Tac-Toe."
                 "\n5) Numerical Tic-Tac-Toe.\n6) Misere Tic-Tac-Toe."
-                "\n7) 4x4 Tic-Tac-Toe.\n8) Ultimate Tic-Tac-Toe.\n9) Exit.\n";
+                "\n7) 4x4 Tic-Tac-Toe.\n8) Ultimate Tic-Tac-Toe.\n9) SUS Tic-Tac-Toe.\n10) Exit.\n";
 
         int mainChoice;
         cin >> mainChoice;
@@ -663,11 +666,93 @@ int main() {
             cout << "====================================================\n";
         }
         else if (mainChoice == 9){
-            cout << "*** Exiting program. Thank you for using the program, hope you enjoyed it :)\nGoodBye!\n";
+            int choice;
+            Player<char>* players[2];
+            auto* board9 = new SUS_board<char>();
+            cout << "\n*** Welcome to the SUS Tic Tac Toe Game :) ***\n";
+            string player1Name, player2Name;
+
+            // Set up Player 1
+            cout << "\n-> Please enter Player 1's name: \n";
+            cin >> player1Name;
+            cout << "\nNow choose Player 1's type:-\n";
+            cout << "1. Human\n";
+            cout << "2. Random Computer\n";
+            while (true) {
+
+                cin >> choice;
+                if (cin.fail()) { // Check for invalid input (e.g., string)
+                    cin.clear(); // Clear the error flag
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+                    cerr << "Invalid input! Please enter 1 or 2.\n";
+                    continue;
+                }
+
+                if (choice == 1) {
+                    players[0] = new SUS_Player<char>(player1Name, 'S');// Create human player
+                    break;
+                } else if (choice == 2) {
+                    players[0] = new SUS_Random<char>('S');// Create random player
+                    israndom_player1 = true;
+                    break;
+                } else {
+                    cerr << "Invalid choice! Please enter 1 or 2.\n";
+                }
+
+            }
+
+            // Set up Player 1
+            cout << "\n-> Please enter Player 2's name: \n";
+            cin >> player2Name;
+            cout << "\nNow choose Player 2's type:-\n";
+            cout << "1. Human\n";
+            cout << "2. Random Computer\n";
+            while (true) {
+
+                cin >> choice;
+                if (cin.fail()) { // Check for invalid input (e.g., string)
+                    cin.clear(); // Clear the error flag
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+                    cerr << "Invalid input! Please enter 1 or 2.\n";
+                    continue;
+                }
+                if (choice == 1) {
+                    players[1] = new SUS_Player<char>(player2Name, 'U');// Create human player
+                    break;
+                } else if (choice == 2) {
+                    players[1] = new SUS_Random<char>('U');// Create random player
+                    israndom_player2 = true;
+                    break;
+                } else {
+                    cerr << "Invalid choice! Please enter 1 or 2.\n";
+                }
+            }
+
+            // Create the game manager
+            GameManager<char> Game9(board9, players);
+            cout << "Giving the Initial Board for this game\n";
+            global_Players[0] = players[0];
+            global_Players[1] = players[1];
+            Game9.run();
+
+            // Clean up resources
+            delete board9;
+            for (int i = 0; i < 2; ++i) {
+                delete players[i];
+            }
+
+            global_Players[0] = nullptr;
+            global_Players[1]= nullptr;
+
+            cout << "====================================================\n";
+
+        }
+        else if (mainChoice == 10){
+            cout << "*** Thank you for using the program, hope you enjoyed it :)\nGoodBye!\n";
             break;
         }
         else {
-            cerr << "Invalid choice! Please enter a number between 1 and 9.\n\n";
+            cerr << "Invalid choice! Please enter a number between 1 and 10.\n\n";
         }
     }
     return 0;
