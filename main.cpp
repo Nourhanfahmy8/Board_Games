@@ -1,3 +1,7 @@
+// File name:  A2_S21_Task2345_20230560_GroupB_20230172_20230119
+// Team members: Nourhan Mohammed Ahmed (20230560), Salma Yasser Saied Abdelhalim (20230172), Habiba Mahmoud Mohamed Salem (20230119)
+
+
 #include "BoardGame_Classes.h"
 #include "Pyramid-X-O.h"
 #include "Four-in-a-row.h"
@@ -11,10 +15,7 @@
 #include <limits>
 
 using namespace std;
-//
-//Player<char>* global_Players[2];
-//static bool israndom_player1 = false;
-//static bool israndom_player2 = false;
+
 
 int main() {
 
