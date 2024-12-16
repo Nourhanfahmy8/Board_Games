@@ -89,7 +89,7 @@ public:
         cout << endl;
     }
     char last_symbol{};
-    bool update_board(int x, int y, T symbol) override {
+    bool update_board(int x, int y, char symbol) override {
         // Check if the coordinates are within bounds
         if (x < 0 || x > 2 || y < 0 || y > 4) {
             return false;
