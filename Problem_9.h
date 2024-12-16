@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iomanip>
 
+
 /// Problem 9: SUS game ///
 
 Player<char>* global_Players[2];
